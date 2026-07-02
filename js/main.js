@@ -1,97 +1,44 @@
 window.addEventListener("load", async () => {
 
-let ruta = "";
+    let ruta = "";
 
-// detectar si estamos dentro de pages
+    // Detectar si estamos dentro de pages
+    if (window.location.pathname.includes("/pages/")) {
+        ruta = "../../";
+    }
 
-if (
-window.location.pathname.includes("/pages/")
-) {
+    async function cargar(id, archivo) {
 
-ruta = "../../";
+        try {
 
-}
+            const respuesta = await fetch(ruta + archivo);
 
+            if (!respuesta.ok) {
+                throw new Error("No encontrado: " + ruta + archivo);
+            }
 
-async function cargar(id, archivo){
+            const html = await respuesta.text();
 
-const r =
-await fetch(ruta + archivo);
+            document.getElementById(id).innerHTML = html;
 
-const html =
-await r.text();
+        } catch (error) {
 
-document
-.getElementById(id)
-.innerHTML = html;
+            console.error(error);
 
-}
+        }
 
+    }
 
-// HEADER
-if(document.getElementById("header")){
+    if (document.getElementById("header")) {
+        await cargar("header", "components/header.html");
+    }
 
-await cargar(
-"header",
-"components/header.html"
-);
+    if (document.getElementById("navbar")) {
+        await cargar("navbar", "components/navbar.html");
+    }
 
-}
-
-
-// NAVBAR
-if(document.getElementById("navbar")){
-
-await cargar(
-"navbar",
-"components/navbar.html"
-);
-
-}
-
-
-// FOOTER
-if(document.getElementById("footer")){
-
-await cargar(
-"footer",
-"components/footer.html"
-);
-
-}
-
-});
-
-// SCROLL SUAVE A CONTACTO
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-const contacto=
-document.querySelector(
-'a[href="#contacto"]'
-);
-
-if(contacto){
-
-contacto.addEventListener(
-"click",
-
-function(e){
-
-e.preventDefault();
-
-document
-.getElementById("contacto")
-.scrollIntoView({
-
-behavior:"smooth",
-
-block:"start"
-
-});
-
-});
-
-}
+    if (document.getElementById("footer")) {
+        await cargar("footer", "components/footer.html");
+    }
 
 });
